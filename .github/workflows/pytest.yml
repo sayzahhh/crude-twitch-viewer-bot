@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest] # , windows-latest] , macos-latest]
-        python-version: ["3.11"]
+        python-version: [3.11]
 
     runs-on: ${{ matrix.os }}
 
@@ -18,14 +18,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Install poetry
-      run: pipx install poetry
-
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-        # uses cache if poetry.lock is unchanged
-        cache: 'poetry'
+    - name: Install poetry
+      run: pip install poetry
     - name: Get packages via poetry
       run: poetry install
 
