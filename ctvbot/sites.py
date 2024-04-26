@@ -159,7 +159,12 @@ class Youtube(Instance):
             self.page.evaluate(tosend)
 
         self.goto_with_retry(self.target_url)
-        self.page.keyboard.press("t")
+
+        self.page.wait_for_selector(".ytd-player", timeout=30000)
+        self.page.wait_for_timeout(5000)
+        if self.page.evaluate("""document.querySelector("div#movie_player").classList.contains('paused-mode')"""):
+            self.page.keyboard.press("Space")
+        self.page.keyboard.press("f")
         self.status = utils.InstanceStatus.INITIALIZED
 
 
@@ -182,7 +187,7 @@ class Kick(Instance):
         pass
 
     def todo_after_spawn(self):
-        self.goto_with_retry("https://kick.com/auth/login")
+        self.goto_with_retry("https://kick.com/terms-of-service")
         self.page.wait_for_timeout(5000)
 
         for key, value in self.local_storage.items():
@@ -257,7 +262,7 @@ class Twitch(Instance):
         self.status = utils.InstanceStatus.BUFFERING
 
     def todo_after_spawn(self):
-        self.goto_with_retry("https://www.twitch.tv/login")
+        self.goto_with_retry("https://www.twitch.tv/p/en/legal/giftcard/")
 
         try:
             self.page.click(self.cookie_css, timeout=15000)
